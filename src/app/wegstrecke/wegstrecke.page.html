@@ -10,35 +10,42 @@
 </ion-header>
 
 <ion-content padding>
-  <h1>Location Daten</h1>
+  <h4>Location Daten - Wegaufzeichnung beginnen</h4>
 
   <ion-button (click)="getPosition()">
-    Get Location
+    Start Aufzeichnung
   </ion-button>
-  <ion-button (click)="watchLocation()">
-    Watch Location Updates
-  </ion-button>
+
   <ion-button (click)="stopLocationWatch()">
-    Stop Location Watch
+    Beende Aufzeichnung
   </ion-button>
+
   <ion-button (click)="calculateDistanceInKm()">
-    Calculate Distance in Km
+    Berechne Distanz
   </ion-button>
+
   <div *ngIf="geoLatitude">
-    <p>Latitude : {{geoLatitude}}</p>
-    <p>Longitude : {{geoLongitude}}</p>
-    <p>Accuracy : {{geoAccuracy}}</p>
+    <p>Latitude 1 : {{geoLatitude}}</p>
+    <p>Longitude 1 : {{geoLongitude}}</p>
+
+    <p>Latitude 2 : {{geoStopLatitude}}</p>
+    <p>Longitude 2 : {{geoStopLongitude}}</p>
+
     <p>Distance in km {{distanceInKm}} </p>
-    <p class="address-text">
 
-      <span class="watch-text" *ngIf="isWatching; else notWatching">
-        Watching Location
-      </span>
-      <ng-template #notWatching>
-        Location Watch Stopped
-      </ng-template>
+    <div class="container">
+        <section class="timer-counter-label">
+          <div *ngIf="counter; else elseBlock"> {{counter}} </div>
+          <ng-template #elseBlock> Press Start </ng-template>
+        </section>
+        <section class="timer-button-container">
+          <button class="timer-button" (click)="startTimer()">
+        {{ startText }}
+      </button>
+          <button class="timer-button" (click)="clearTimer()">Clear</button>
+        </section>
+      </div>
 
-    </p>
   </div>
 
 </ion-content>

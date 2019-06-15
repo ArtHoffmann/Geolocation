@@ -11,6 +11,8 @@ import {
   MarkerOptions,
   Marker
 } from '@ionic-native/google-maps';
+import { FotoPage } from '../foto/foto.page';
+import { Observable, timer, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-wegstrecke',
@@ -34,6 +36,14 @@ export class WegstreckePage implements OnInit {
   loading: any;
   isWatching: boolean;
 
+  counter: number;
+  timerRef;
+  running = false;
+  startText = 'Start';
+
+
+  subscribe: Subscription;
+
   geoencoderOptions: NativeGeocoderOptions = {
     useLocale: true,
     maxResults: 5
@@ -46,6 +56,33 @@ export class WegstreckePage implements OnInit {
 
   ngOnInit() { }
 
+  starteTimer() {
+    this.running = !this.running;
+    if (this.running) {
+      this.startText = 'Stop';
+      const startTime = Date.now() - (this.counter || 0);
+      this.timerRef = setInterval(() => {
+        this.counter = Date.now() - startTime;
+      });
+    } else {
+      this.startText = 'Resume';
+      this.stopeTimer();
+    }
+  }
+
+  stopeTimer() {
+    this.running = false;
+    this.startText = 'Start';
+    this.counter = undefined;
+    clearInterval(this.timerRef);
+  }
+
+  clearTimer() {
+    this.running = false;
+    this.startText = 'Start';
+    this.counter = undefined;
+    clearInterval(this.timerRef);
+  }
   getGeolocation() {
     this.geolocation.getCurrentPosition().then((resp) => {
       this.geoLatitude = resp.coords.latitude;
@@ -76,15 +113,17 @@ export class WegstreckePage implements OnInit {
   }
 
   stopLocationWatch() {
+    this.stopeTimer();
     this.isWatching = false;
-    // this.watchLocationUpdates.unsubscribe();
     this.geolocation.getCurrentPosition().then((resp) => {
-      this.geoStopLatitude = resp.coords.latitude + 0.1 ;
-      this.geoStopLongitude = resp.coords.longitude + 0.1;
+      this.geoStopLatitude = resp.coords.latitude;
+      this.geoStopLongitude = resp.coords.longitude;
     });
+    this.calculateDistanceInKm();
   }
 
   getPosition() {
+    this.starteTimer();
     this.geolocation.getCurrentPosition().then((resp) => {
       const coordinates: LatLng = new LatLng(resp.coords.latitude, resp.coords.longitude);
       console.log('datensatz ' + resp.coords.longitude, resp.coords.latitude);
@@ -95,11 +134,6 @@ export class WegstreckePage implements OnInit {
   }
   calculateDistanceInKm() {
     this.distanceInKm = this.getDistanceFromLatLonInKm(this.geoLatitude, this.geoLongitude, this.geoStopLatitude, this.geoStopLongitude);
-    console.log(this.geoLatitude);
-    console.log(this.geoLongitude);
-    console.log(this.geoStopLatitude);
-    console.log(this.geoStopLongitude);
-    console.log(this.distanceInKm);
   }
 
   getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
@@ -113,11 +147,12 @@ export class WegstreckePage implements OnInit {
       ;
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const d = R * c; // Distance in km
-    console.log('berechnung ' + d);
     return d;
   }
 
   deg2rad(deg) {
     return deg * (Math.PI / 180);
   }
+
+
 }
