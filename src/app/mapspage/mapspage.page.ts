@@ -21,10 +21,6 @@ declare var google;
 
 export class MapspagePage implements OnInit {
 
-  // @ViewChild('map') mapElement: ElementRef;
-  // map: any;
-  // address: string;
-
   constructor(
     private geolocation: Geolocation,
     private nativeGeocoder: NativeGeocoder) {
@@ -32,61 +28,11 @@ export class MapspagePage implements OnInit {
 
 
   ngOnInit() {
-    // this.loadMap();
+
     this.loadMap();
   }
 
-  // loadMap() {
-  //   this.geolocation.getCurrentPosition().then((resp) => {
-  //     const latLng = new google.maps.LatLng(resp.coords.latitude, resp.coords.longitude);
-  //     const mapOptions = {
-  //       center: latLng,
-  //       zoom: 15,
-  //       mapTypeId: google.maps.MapTypeId.ROADMAP
-  //     };
 
-  //     this.getAddressFromCoords(resp.coords.latitude, resp.coords.longitude);
-
-  //     this.map = new google.maps.Map(this.mapElement.nativeElement, mapOptions);
-
-  //     this.map.addListener('tilesloaded', () => {
-  //       console.log('accuracy', this.map);
-  //       this.getAddressFromCoords(this.map.center.lat(), this.map.center.lng());
-  //     });
-
-  //   }).catch((error) => {
-  //     console.log('Error getting location', error);
-  //   });
-  // }
-
-  // getAddressFromCoords(lattitude, longitude) {
-  //   console.log('getAddressFromCoords' + lattitude + '' + longitude);
-  //   const options: NativeGeocoderOptions = {
-  //     useLocale: true,
-  //     maxResults: 5
-  //   };
-
-  //   this.nativeGeocoder.reverseGeocode(lattitude, longitude, options)
-  //     .then((result: []) => {
-  //       this.address = '';
-  //       const responseAddress = [];
-  //       for (const [key, value] of Object.entries(result)) {
-  //         if (value > 0) {
-  //           responseAddress.push(value);
-  //         }
-
-  //       }
-  //       responseAddress.reverse();
-  //       for (const v of responseAddress) {
-  //         this.address += v + ',';
-  //       }
-  //       this.address = this.address.slice(0, -2);
-  //     })
-  //     .catch((error: any) => {
-  //       this.address = 'Address not found';
-  //     });
-
-  // }
   loadMap() {
     this.geolocation.getCurrentPosition().then((resp) => {
       const map = GoogleMaps.create('map');
