@@ -45,6 +45,12 @@ export class MapspagePage implements OnInit {
           target: coordinates,
           zoom: 14
         };
+        const coordinatesEnd: LatLng = new LatLng(resp.coords.latitude, resp.coords.longitude);
+        console.log('datensatz ' + resp.coords.longitude, resp.coords.latitude);
+        const position2 = {
+          target: coordinates,
+          zoom: 14
+        };
 
         map.animateCamera(position);
 
@@ -52,8 +58,17 @@ export class MapspagePage implements OnInit {
           position: coordinates,
           title: 'Hier bin ich'
         };
+        const markerOptionsEnd: MarkerOptions = {
+          position: coordinatesEnd,
+          title: 'Ziel'
+        };
 
         const marker = map.addMarker(markerOptions)
+          // tslint:disable-next-line:no-shadowed-variable
+          .then((marker: Marker) => {
+            marker.showInfoWindow();
+          });
+        const markerEnd = map.addMarker(markerOptionsEnd)
           // tslint:disable-next-line:no-shadowed-variable
           .then((marker: Marker) => {
             marker.showInfoWindow();
