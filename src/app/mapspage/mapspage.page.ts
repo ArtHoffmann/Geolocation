@@ -36,7 +36,6 @@ export class MapspagePage implements OnInit {
   loadMap() {
     this.geolocation.getCurrentPosition().then((resp) => {
       const map = GoogleMaps.create('map');
-
       map.one(GoogleMapsEvent.MAP_READY).then((data: any) => {
 
         const coordinates: LatLng = new LatLng(resp.coords.latitude, resp.coords.longitude);
