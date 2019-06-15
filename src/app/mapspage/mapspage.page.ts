@@ -44,12 +44,8 @@ export class MapspagePage implements OnInit {
           target: coordinates,
           zoom: 14
         };
-        const coordinatesEnd: LatLng = new LatLng(resp.coords.latitude, resp.coords.longitude);
+        const coordinatesEnd: LatLng = new LatLng(resp.coords.latitude + 0.1, resp.coords.longitude + 0.1);
         console.log('datensatz ' + resp.coords.longitude, resp.coords.latitude);
-        const position2 = {
-          target: coordinates,
-          zoom: 14
-        };
 
         map.animateCamera(position);
 
@@ -72,6 +68,30 @@ export class MapspagePage implements OnInit {
           .then((marker: Marker) => {
             marker.showInfoWindow();
           });
+        const points = [];
+        // points.push({
+        //   lat: resp.coords.latitude,
+        //   lng: resp.coords.longitude
+        // });
+        // points.push({
+        //   lat: resp.coords.latitude + 0.01,
+        //   lng: resp.coords.longitude + 0.2
+        // });
+        // points.push({
+        //   lat: resp.coords.latitude + 0.1,
+        //   lng: resp.coords.longitude + 0.23
+        // });
+        // points.push({
+        //   lat: resp.coords.latitude + 0.13,
+        //   lng: resp.coords.longitude - 0.3
+        // });
+
+        map.addPolyline({
+          points,
+          color: '#AA00FF',
+          width: 5,
+          geodesic: true
+        });
       });
     });
   }
