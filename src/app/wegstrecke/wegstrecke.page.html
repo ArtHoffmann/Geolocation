@@ -1,0 +1,44 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Wegstrecke
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <h1>Location Daten</h1>
+
+  <ion-button (click)="getPosition()">
+    Get Location
+  </ion-button>
+  <ion-button (click)="watchLocation()">
+    Watch Location Updates
+  </ion-button>
+  <ion-button (click)="stopLocationWatch()">
+    Stop Location Watch
+  </ion-button>
+  <ion-button (click)="calculateDistanceInKm()">
+    Calculate Distance in Km
+  </ion-button>
+  <div *ngIf="geoLatitude">
+    <p>Latitude : {{geoLatitude}}</p>
+    <p>Longitude : {{geoLongitude}}</p>
+    <p>Accuracy : {{geoAccuracy}}</p>
+    <p>Distance in km {{distanceInKm}} </p>
+    <p class="address-text">
+
+      <span class="watch-text" *ngIf="isWatching; else notWatching">
+        Watching Location
+      </span>
+      <ng-template #notWatching>
+        Location Watch Stopped
+      </ng-template>
+
+    </p>
+  </div>
+
+</ion-content>

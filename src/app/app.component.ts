@@ -19,7 +19,23 @@ export class AppComponent {
       title: 'List',
       url: '/list',
       icon: 'list'
-    }
+    },
+    {
+      title: 'Foto',
+      url: '/foto',
+      icon: 'camera'
+    },
+    {
+      title: 'Wegstrecke',
+      url: '/wegstrecke',
+      icon: 'person'
+    },
+    {
+      title: 'Maps',
+      url: '/mapspage',
+      icon: 'locate'
+    },
+
   ];
 
   constructor(

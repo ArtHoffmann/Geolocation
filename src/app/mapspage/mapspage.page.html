@@ -1,0 +1,29 @@
+ <ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Google Maps Address
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-col text-end>
+    <ion-button (click)="loadMap()" shape="round" fill="outline">
+      <ion-icon slot="start" name="locate"></ion-icon>
+     Standort aktualisieren
+    </ion-button>
+  </ion-col>
+  <div class="map-wrapper">
+    <div id="map_center">
+      <!-- <img src="../../assets/marker.svg" /> -->
+    </div>
+    <div #map id="map"></div>
+  </div>
+  <!-- <div id="address">
+    <span>{{address}}</span>
+  </div> -->
+</ion-content> 
+
