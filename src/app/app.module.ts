@@ -12,6 +12,7 @@ import { IonicStorageModule } from '@ionic/storage';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { NativeGeocoder } from '@ionic-native/native-geocoder/ngx';
 import { GoogleMaps } from '@ionic-native/google-maps';
+import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -28,6 +29,7 @@ import { GoogleMaps } from '@ionic-native/google-maps';
     Geolocation,
     GoogleMaps,
     NativeGeocoder,
+    Camera,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
 
   ],
