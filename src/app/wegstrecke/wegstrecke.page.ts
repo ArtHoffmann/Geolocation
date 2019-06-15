@@ -37,6 +37,7 @@ export class WegstreckePage implements OnInit {
   isWatching: boolean;
 
   counter: number;
+  time: number;
   timerRef;
   running = false;
   startText = 'Start';
@@ -56,24 +57,29 @@ export class WegstreckePage implements OnInit {
 
   ngOnInit() { }
 
-  starteTimer() {
+  startTimer() {
     this.running = !this.running;
     if (this.running) {
       this.startText = 'Stop';
       const startTime = Date.now() - (this.counter || 0);
       this.timerRef = setInterval(() => {
         this.counter = Date.now() - startTime;
+        this.time = Date.now() - startTime;
       });
     } else {
       this.startText = 'Resume';
-      this.stopeTimer();
+      this.stopTimer();
+    }
+    if (this.counter > 9) {
+      this.counter = 0;
     }
   }
 
-  stopeTimer() {
+  stopTimer() {
     this.running = false;
     this.startText = 'Start';
-    this.counter = undefined;
+    const startTime = Date.now() - (this.counter || 0);
+    this.counter = Date.now() - startTime;
     clearInterval(this.timerRef);
   }
 
@@ -113,7 +119,7 @@ export class WegstreckePage implements OnInit {
   }
 
   stopLocationWatch() {
-    this.stopeTimer();
+    this.stopTimer();
     this.isWatching = false;
     this.geolocation.getCurrentPosition().then((resp) => {
       this.geoStopLatitude = resp.coords.latitude;
@@ -123,7 +129,7 @@ export class WegstreckePage implements OnInit {
   }
 
   getPosition() {
-    this.starteTimer();
+    this.startTimer();
     this.geolocation.getCurrentPosition().then((resp) => {
       const coordinates: LatLng = new LatLng(resp.coords.latitude, resp.coords.longitude);
       console.log('datensatz ' + resp.coords.longitude, resp.coords.latitude);
