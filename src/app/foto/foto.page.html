@@ -9,9 +9,13 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content padding>
+  <h3>Bild aufnehmen</h3>
+    <ion-button ion-button full (click)="takePhoto()">
+      <ion-icon name="camera"></ion-icon>&nbsp;Foto
+    </ion-button>
 
-  <ion-button (click)="openCam()">Open Camera</ion-button>
-  <img src="{{image}}">
+
+
 
 </ion-content>

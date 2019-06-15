@@ -8,39 +8,41 @@ import { Storage } from '@ionic/storage';
   styleUrls: ['./foto.page.scss'],
 })
 export class FotoPage implements OnInit {
-  public photos: Photo[] = [];
+  // public photos: Photo[] = [];
+  public photos: any;
+  public base64Image: string;
+  public fileImage: string;
+  public responseData: any;
+  userData = { user_id: '', token: '', imageB64: '' };
 
   constructor(private camera: Camera, private storage: Storage) { }
 
   ngOnInit() {
+    // this.loadSaved();
   }
-  openCam() {
+  takePhoto() {
+    console.log('coming here');
 
     const options: CameraOptions = {
-      quality: 100,
-      destinationType: this.camera.DestinationType.FILE_URI,
+      quality: 50,
+      destinationType: this.camera.DestinationType.DATA_URL,
       encodingType: this.camera.EncodingType.JPEG,
-      mediaType: this.camera.MediaType.PICTURE
+      mediaType: this.camera.MediaType.PICTURE,
+      targetWidth: 450,
+      targetHeight: 450,
+      saveToPhotoAlbum: true
     };
-    this.camera.getPicture(options).then((imageData) => {
-      // Add new photo to gallery
-      this.photos.unshift({
-        data: 'data:image/jpeg;base64,' + imageData
-      });
 
-      // Save all photos for later viewing
-      this.storage.set('photos', this.photos);
-    }, (err) => {
-     // Handle error
-     console.log('Camera issue: ' + err);
-    });
+    this.camera.getPicture(options).then(
+      imageData => {
+        this.base64Image = 'data:image/jpeg;base64,' + imageData;
+        this.photos.push(this.base64Image);
+        this.photos.reverse();
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
-  loadSaved() {
-    this.storage.get('photos').then((photos) => {
-      this.photos = photos || [];
-    });
-  }
-}
-class Photo {
-  data: any;
+
 }
