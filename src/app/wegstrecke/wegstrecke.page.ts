@@ -64,14 +64,18 @@ export class WegstreckePage implements OnInit {
       const startTime = Date.now() - (this.counter || 0);
       this.timerRef = setInterval(() => {
         this.counter = Date.now() - startTime;
+        this.newMethod();
         this.time = Date.now() - startTime;
       });
     } else {
       this.startText = 'Resume';
       this.stopTimer();
     }
-    if (this.counter > 9) {
-      this.counter = 0;
+  }
+
+  private newMethod() {
+    if (this.counter > 3599999) {
+      this.counter -= 3599999;
     }
   }
 

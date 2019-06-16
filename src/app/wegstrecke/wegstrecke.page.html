@@ -35,7 +35,7 @@
 
     <div class="container">
         <section class="timer-counter-label">
-          <div *ngIf="counter; else elseBlock">{{(time / 1000 ) | number: '1.0-0'}}h {{(counter / 1000) | number: '1.0-0' }}min </div>
+          <div *ngIf="counter; else elseBlock">{{ ((time / 1000) / 60) / 60 | number: '1.0-0'}}h {{ ((counter / 1000) / 60) | number: '2.0-0' }}m </div>
           <ng-template #elseBlock> Press Start </ng-template>
         </section>
         <section class="timer-button-container">
