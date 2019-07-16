@@ -12,10 +12,10 @@ import {
   MarkerOptions,
   Marker
 } from '@ionic-native/google-maps';
-import { FotoPage } from '../foto/foto.page';
 import { Observable, timer, Subscription } from 'rxjs';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { NavController } from '@ionic/angular';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-wegstrecke',
@@ -24,7 +24,10 @@ import { NavController } from '@ionic/angular';
 })
 export class WegstreckePage implements OnInit {
 
-  anOtherPage: FotoPage;
+  starTime;
+  end;
+  diff;
+  show = false;
 
   geoLatitude: number;
   geoLongitude: number;
@@ -58,6 +61,20 @@ export class WegstreckePage implements OnInit {
   public responseData: any;
   userData = { user_id: '', token: '', imageB64: '' };
 
+  startTime() {
+    this.starTime = moment().format('DD/MM/YYYY HH:mm:ss');
+    console.log('Start ' + this.starTime);
+   }
+  endTime() {
+    this.end = moment().format('DD/MM/YYYY HH:mm:ss');
+    console.log('Ende ' + this.end);
+    this.calcTimeDiffernce(this.starTime, this.end);
+    this.show = true;
+   }
+  calcTimeDiffernce(starTime: any, endTime: any) {
+    this.diff = (moment.utc(moment(endTime, 'DD/MM/YYYY HH:mm:ss').diff(moment(starTime, 'DD/MM/YYYY HH:mm:ss'))).format('HH:mm:ss'));
+    console.log(moment.utc(moment(endTime, 'DD/MM/YYYY HH:mm:ss').diff(moment(starTime, 'DD/MM/YYYY HH:mm:ss'))).format('HH:mm:ss'));
+  }
   takePhoto() {
     console.log('coming here');
 
