@@ -10,5 +10,32 @@
 </ion-header>
 
 <ion-content>
+  <ion-list>
+    <ion-list-header>
+      Bisherige Läufe:
+    </ion-list-header>
+    <ion-button (click)="deleteAllElements()" [ngStyle]="{'margin-left': '17px'}">
+      <ion-icon name="close"></ion-icon>
+      Alle löschen
+    </ion-button>
 
+    <ion-item *ngFor="let run of previousRuns">
+      <ion-avatar slot="start">
+        <img src="{{run?.photo}}">
+      </ion-avatar>
+      <ion-label>
+        <h2>Datum: {{run.date}}</h2>
+        <h3>Zeit: {{run?.runTime}}</h3>
+        <p>Strecke: {{run?.distance}}</p>
+      </ion-label>
+
+      <ion-button (click)="deleteElement(run)">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+
+      <ion-button (click)="viewSpecificRun(run)" routerLink="/wegstrecke">
+        <ion-icon name="eye"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-list>
 </ion-content>

@@ -24,8 +24,9 @@
     Berechne Distanz
   </ion-button>
 
-  <div *ngIf="geoLatitude">
+  <div *ngIf="geoLatitude && !show">
     <p>Aufzeichnung hat begonnen</p>
+    <p>Aktuelle Dauer: {{showTime}}</p>
     <!--<p>Latitude 1 : {{geoLatitude}}</p>
     <p>Longitude 1 : {{geoLongitude}}</p>
 
@@ -36,11 +37,17 @@
     
     <ion-button (click)="startTime()">Start</ion-button>
     <ion-button (click)="endTime()">End</ion-button>-->
-
-    <div *ngIf="show">
-      <span> Dauer für die Zurückgelegte Strecke: {{diff}} </span>
-    </div>
-
   </div>
 
+  <div *ngIf="show">
+    <p>Aufzeichnung beendet</p>
+    <p> Dauer für die Zurückgelegte Strecke: {{diff}} </p>
+    <p>Zurückgelegte Stecke: {{distanceInKm}}km</p>
+  </div>
+  <div class="map-wrapper">
+    <div id="map_center">
+      <!-- <img src="../../assets/marker.svg" /> -->
+    </div>
+    <div #map id="map"></div>
+  </div>
 </ion-content>

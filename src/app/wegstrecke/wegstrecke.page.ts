@@ -16,6 +16,7 @@ import { Observable, timer, Subscription } from 'rxjs';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { NavController } from '@ionic/angular';
 import * as moment from 'moment';
+declare var google;
 
 @Component({
   selector: 'app-wegstrecke',
@@ -27,7 +28,10 @@ export class WegstreckePage implements OnInit {
   starTime;
   end;
   diff;
+  showTime;
   show = false;
+
+  coordinates: Coordinate[] = [];
 
   geoLatitude: number;
   geoLongitude: number;
@@ -61,20 +65,53 @@ export class WegstreckePage implements OnInit {
   public responseData: any;
   userData = { user_id: '', token: '', imageB64: '' };
 
+  constructor(
+    private geolocation: Geolocation,
+    private nativeGeocoder: NativeGeocoder,
+    private storage: Storage,
+    private camera: Camera,
+    public navCtrl: NavController,
+  ) { }
+
+  ngOnInit() {
+    // this.loadSaved();
+    // this.loadMap();
+    const viewRun = JSON.parse(localStorage.getItem('viewRun')) as Run;
+    if (viewRun !== null) {
+      // this.loadMap(viewRun.coordinates);
+    }
+
+  }
+
   startTime() {
     this.starTime = moment().format('DD/MM/YYYY HH:mm:ss');
     console.log('Start ' + this.starTime);
-   }
+  }
+
   endTime() {
     this.end = moment().format('DD/MM/YYYY HH:mm:ss');
     console.log('Ende ' + this.end);
     this.calcTimeDiffernce(this.starTime, this.end);
     this.show = true;
-   }
+    this.loadMap(this.coordinates);
+    let previousRuns: Run[] = JSON.parse(localStorage.getItem('previousRuns')) as Run[];
+    if (previousRuns !== null) {
+      // tslint:disable-next-line:max-line-length
+      previousRuns.push({ date: moment().format('DD/MM/YYYY HH:mm:ss'), coordinates: this.coordinates, runTime: this.diff, distance: this.getDistanceFromLatLonInKm(this.geoLatitude, this.geoLongitude, this.geoStopLatitude, this.geoStopLongitude), photo: this.base64Image } as Run);
+      localStorage.setItem('previousRuns', JSON.stringify(previousRuns));
+    } else {
+      previousRuns = [];
+      // tslint:disable-next-line:max-line-length
+      previousRuns.push({ date: moment().format('DD/MM/YYYY HH:mm:ss'), coordinates: this.coordinates, runTime: this.diff, distance: this.distanceInKm, photo: this.base64Image } as Run);
+      localStorage.setItem('previousRuns', JSON.stringify(previousRuns));
+    }
+  }
+
   calcTimeDiffernce(starTime: any, endTime: any) {
     this.diff = (moment.utc(moment(endTime, 'DD/MM/YYYY HH:mm:ss').diff(moment(starTime, 'DD/MM/YYYY HH:mm:ss'))).format('HH:mm:ss'));
     console.log(moment.utc(moment(endTime, 'DD/MM/YYYY HH:mm:ss').diff(moment(starTime, 'DD/MM/YYYY HH:mm:ss'))).format('HH:mm:ss'));
   }
+
   takePhoto() {
     console.log('coming here');
 
@@ -100,22 +137,7 @@ export class WegstreckePage implements OnInit {
     );
   }
 
-
-  constructor(
-    private geolocation: Geolocation,
-    private nativeGeocoder: NativeGeocoder,
-    private storage: Storage,
-    private camera: Camera,
-    public navCtrl: NavController,
-  ) { }
-
-  ngOnInit() {
-    // this.loadSaved();
-    this.loadMap();
-  }
-
-
-  loadMap() {
+  loadMap(path: Coordinate[]) {
     this.geolocation.getCurrentPosition().then((resp) => {
       const map = GoogleMaps.create('map');
       map.one(GoogleMapsEvent.MAP_READY).then((data: any) => {
@@ -131,26 +153,27 @@ export class WegstreckePage implements OnInit {
 
         map.animateCamera(position);
 
-        const markerOptions: MarkerOptions = {
-          position: coordinates,
-          title: 'Hier bin ich'
-        };
-        const markerOptionsEnd: MarkerOptions = {
-          position: coordinatesEnd,
-          title: 'Ziel'
-        };
 
-        const marker = map.addMarker(markerOptions)
-          // tslint:disable-next-line:no-shadowed-variable
-          .then((marker: Marker) => {
-            marker.showInfoWindow();
-          });
-        const markerEnd = map.addMarker(markerOptionsEnd)
-          // tslint:disable-next-line:no-shadowed-variable
-          .then((marker: Marker) => {
-            marker.showInfoWindow();
-          });
-        const points = [];
+        // const markerOptions: MarkerOptions = {
+        //   position: coordinates,
+        //   title: 'Hier bin ich'
+        // };
+        // const markerOptionsEnd: MarkerOptions = {
+        //   position: coordinatesEnd,
+        //   title: 'Ziel'
+        // };
+
+        // const marker = map.addMarker(markerOptions)
+        //   // tslint:disable-next-line:no-shadowed-variable
+        //   .then((marker: Marker) => {
+        //     marker.showInfoWindow();
+        //   });
+        // const markerEnd = map.addMarker(markerOptionsEnd)
+        //   // tslint:disable-next-line:no-shadowed-variable
+        //   .then((marker: Marker) => {
+        //     marker.showInfoWindow();
+        //   });
+        // const points = [];
         // points.push({
         //   lat: resp.coords.latitude,
         //   lng: resp.coords.longitude
@@ -168,12 +191,35 @@ export class WegstreckePage implements OnInit {
         //   lng: resp.coords.longitude - 0.3
         // });
 
+        console.log('drawRun');
+        // localStorage.removeItem('viewRun');
         map.addPolyline({
-          points,
-          color: '#AA00FF',
-          width: 5,
+          points: path,
+          strokeColor: '#AA00FF',
+          strokeOpacity: 1.0,
+          stokeWeight: 3.0,
+          // width: 5,
           geodesic: true
         });
+        map.addMarker({
+          position: path[path.length - 1],
+          title: 'Ende',
+          icon: this.base64Image
+          // tslint:disable-next-line:no-shadowed-variable
+        }).then((marker: Marker) => {
+          marker.showInfoWindow();
+        });
+
+        map.addMarker({
+          position: path[0],
+          title: 'Start'
+        })
+          // tslint:disable-next-line:no-shadowed-variable
+          .then((marker: Marker) => {
+            marker.showInfoWindow();
+          });
+
+
       });
     });
   }
@@ -187,7 +233,16 @@ export class WegstreckePage implements OnInit {
         this.counter = Date.now() - startTime;
         this.newMethod();
         this.time = Date.now() - startTime;
-      });
+        // tslint:disable-next-line:max-line-length
+        this.geolocation.getCurrentPosition().then((resp) => {
+          console.log('new');
+          this.coordinates.push({ lng: resp.coords.longitude, lat: resp.coords.latitude } as Coordinate);
+          console.log(this.coordinates);
+        });
+        // console.log(this.coordinates);
+        // tslint:disable-next-line:max-line-length
+        this.showTime = (moment.utc(moment(moment().format('DD/MM/YYYY HH:mm:ss'), 'DD/MM/YYYY HH:mm:ss').diff(moment(this.starTime, 'DD/MM/YYYY HH:mm:ss'))).format('HH:mm:ss'));
+      }, 1000);
     } else {
       this.startText = 'Resume';
       this.stopTimer();
@@ -287,4 +342,18 @@ export class WegstreckePage implements OnInit {
   }
 
 
+}
+
+
+export class Coordinate {
+  lng: number;
+  lat: number;
+}
+
+export class Run {
+  date: string;
+  coordinates: Coordinate[];
+  runTime: string;
+  distance: number;
+  photo: any;
 }
