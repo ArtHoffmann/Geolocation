@@ -100,6 +100,7 @@ export class WegstreckePage implements OnInit {
     this.end = moment().format('DD/MM/YYYY HH:mm:ss');
     console.log('Ende ' + this.end);
     this.calcTimeDiffernce(this.starTime, this.end);
+
     // this.show = true;
     // this.loadMap(this.coordinates);
     // ....
@@ -126,6 +127,7 @@ export class WegstreckePage implements OnInit {
     this.camera.getPicture(options).then(
       imageData => {
         this.base64Image = 'data:image/jpeg;base64,' + imageData;
+        this.distanceInKm = Number.parseFloat(this.distanceInKm.toFixed(2));
         this.show = true;
         this.loadMap(this.coordinates);
         this.photos.push(this.base64Image);
@@ -133,6 +135,7 @@ export class WegstreckePage implements OnInit {
       },
       err => {
         console.log(err);
+        this.distanceInKm = Number.parseFloat(this.distanceInKm.toFixed(2));
         this.show = true;
         this.loadMap(this.coordinates);
       }
@@ -220,7 +223,13 @@ export class WegstreckePage implements OnInit {
         map.addMarker({
           position: path[path.length - 1],
           title: 'Ende',
-          icon: this.base64Image
+          icon: {
+            url: this.base64Image,
+            size: {
+              width: 64,
+              height: 48
+            }
+          }
           // tslint:disable-next-line:no-shadowed-variable
         }).then((marker: Marker) => {
           marker.showInfoWindow();
@@ -326,8 +335,8 @@ export class WegstreckePage implements OnInit {
       this.geoStopLatitude = resp.coords.latitude;
       this.geoStopLongitude = resp.coords.longitude;
     });
-    this.calculateDistanceInKm();
-    this.distanceInKm = +this.distanceInKm.toFixed(2);
+    // this.calculateDistanceInKm();
+    // this.distanceInKm = +this.distanceInKm.toFixed(2);
     this.takePhoto();
   }
 
