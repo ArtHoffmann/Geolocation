@@ -20,7 +20,7 @@
     Beende Aufzeichnung
   </ion-button>
 
-  <ion-button (click)="calculateDistanceInKm()">
+  <ion-button (click)="saveRun()" *ngIf="show">
     Berechne Distanz
   </ion-button>
 
@@ -43,11 +43,11 @@
     <p>Aufzeichnung beendet</p>
     <p> Dauer für die Zurückgelegte Strecke: {{diff}} </p>
     <p>Zurückgelegte Stecke: {{distanceInKm}}km</p>
+    <div #map id="map_canvas"></div>
   </div>
-  <div class="map-wrapper">
+  <!-- <div class="map-wrapper" *ngIf="show">
     <div id="map_center">
-      <!-- <img src="../../assets/marker.svg" /> -->
     </div>
     <div #map id="map"></div>
-  </div>
+  </div> -->
 </ion-content>

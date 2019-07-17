@@ -94,17 +94,7 @@ export class WegstreckePage implements OnInit {
     this.calcTimeDiffernce(this.starTime, this.end);
     this.show = true;
     this.loadMap(this.coordinates);
-    let previousRuns: Run[] = JSON.parse(localStorage.getItem('previousRuns')) as Run[];
-    if (previousRuns !== null) {
-      // tslint:disable-next-line:max-line-length
-      previousRuns.push({ date: moment().format('DD/MM/YYYY HH:mm:ss'), coordinates: this.coordinates, runTime: this.diff, distance: this.getDistanceFromLatLonInKm(this.geoLatitude, this.geoLongitude, this.geoStopLatitude, this.geoStopLongitude), photo: this.base64Image } as Run);
-      localStorage.setItem('previousRuns', JSON.stringify(previousRuns));
-    } else {
-      previousRuns = [];
-      // tslint:disable-next-line:max-line-length
-      previousRuns.push({ date: moment().format('DD/MM/YYYY HH:mm:ss'), coordinates: this.coordinates, runTime: this.diff, distance: this.distanceInKm, photo: this.base64Image } as Run);
-      localStorage.setItem('previousRuns', JSON.stringify(previousRuns));
-    }
+    // ....
   }
 
   calcTimeDiffernce(starTime: any, endTime: any) {
@@ -135,6 +125,20 @@ export class WegstreckePage implements OnInit {
         console.log(err);
       }
     );
+  }
+
+  saveRun() {
+    let previousRuns: Run[] = JSON.parse(localStorage.getItem('previousRuns')) as Run[];
+    if (previousRuns !== null) {
+      // tslint:disable-next-line:max-line-length
+      previousRuns.push({ date: moment().format('DD/MM/YYYY HH:mm:ss'), coordinates: this.coordinates, runTime: this.diff, distance: this.getDistanceFromLatLonInKm(this.geoLatitude, this.geoLongitude, this.geoStopLatitude, this.geoStopLongitude), photo: this.base64Image } as Run);
+      localStorage.setItem('previousRuns', JSON.stringify(previousRuns));
+    } else {
+      previousRuns = [];
+      // tslint:disable-next-line:max-line-length
+      previousRuns.push({ date: moment().format('DD/MM/YYYY HH:mm:ss'), coordinates: this.coordinates, runTime: this.diff, distance: this.distanceInKm, photo: this.base64Image } as Run);
+      localStorage.setItem('previousRuns', JSON.stringify(previousRuns));
+    }
   }
 
   loadMap(path: Coordinate[]) {
