@@ -16,6 +16,7 @@ import { Observable, timer, Subscription } from 'rxjs';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { NavController } from '@ionic/angular';
 import * as moment from 'moment';
+import { BackgroundMode } from '@ionic-native/background-mode/ngx';
 declare var google;
 
 @Component({
@@ -72,6 +73,7 @@ export class WegstreckePage implements OnInit {
     private storage: Storage,
     private camera: Camera,
     public navCtrl: NavController,
+    private backgroundMode: BackgroundMode,
   ) { }
 
   ngOnInit() {
@@ -254,6 +256,7 @@ export class WegstreckePage implements OnInit {
     if (this.running) {
       this.startText = 'Stop';
       const startTime = Date.now() - (this.counter || 0);
+      this.backgroundMode.enable();
       this.timerRef = setInterval(() => {
         this.counter = Date.now() - startTime;
         this.newMethod();

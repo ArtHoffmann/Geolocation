@@ -13,6 +13,7 @@ import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { NativeGeocoder } from '@ionic-native/native-geocoder/ngx';
 import { GoogleMaps } from '@ionic-native/google-maps';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+import { BackgroundMode } from '@ionic-native/background-mode/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -31,6 +32,7 @@ import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
     NativeGeocoder,
     Camera,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    BackgroundMode
 
   ],
   bootstrap: [AppComponent]
