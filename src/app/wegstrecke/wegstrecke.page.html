@@ -21,7 +21,7 @@
   </ion-button>
 
   <ion-button (click)="saveRun()" *ngIf="show">
-    Berechne Distanz
+    Lauf abspeichern
   </ion-button>
 
   <div *ngIf="geoLatitude && !show">
@@ -40,10 +40,11 @@
   </div>
 
   <div *ngIf="show">
-    <p>Aufzeichnung beendet</p>
-    <p> Dauer für die Zurückgelegte Strecke: {{diff}} </p>
+    <p *ngIf="oldRun === null">Aufzeichnung beendet</p>
+    <p *ngIf="oldRun !== null">Datum des Laufes: {{oldRun}}</p>
+    <p>Dauer des Laufes: {{diff}} </p>
     <p>Zurückgelegte Stecke: {{distanceInKm}}km</p>
-    <div #map id="map_canvas"></div>
+    <div #map id="map" class="map_canvas"></div>
   </div>
   <!-- <div class="map-wrapper" *ngIf="show">
     <div id="map_center">

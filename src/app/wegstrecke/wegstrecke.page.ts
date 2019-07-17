@@ -39,7 +39,7 @@ export class WegstreckePage implements OnInit {
   geoStopLatitude: number;
   geoStopLongitude: number;
 
-  distanceInKm: number;
+  distanceInKm = 0;
 
   geoAccuracy: number;
   geoAddress: string;
@@ -58,6 +58,7 @@ export class WegstreckePage implements OnInit {
   timerRef;
   running = false;
   startText = 'Start';
+  oldRun: string = null;
 
   public photos: any;
   public base64Image: string;
@@ -78,7 +79,14 @@ export class WegstreckePage implements OnInit {
     // this.loadMap();
     const viewRun = JSON.parse(localStorage.getItem('viewRun')) as Run;
     if (viewRun !== null) {
-      // this.loadMap(viewRun.coordinates);
+      localStorage.removeItem('viewRun');
+
+      this.loadMap(viewRun.coordinates);
+      this.distanceInKm = viewRun.distance;
+      this.diff = viewRun.runTime;
+      this.base64Image = viewRun.photo;
+      this.oldRun = viewRun.date;
+      this.show = true;
     }
 
   }
@@ -118,6 +126,8 @@ export class WegstreckePage implements OnInit {
     this.camera.getPicture(options).then(
       imageData => {
         this.base64Image = 'data:image/jpeg;base64,' + imageData;
+        this.show = true;
+        this.loadMap(this.coordinates);
         this.photos.push(this.base64Image);
         this.photos.reverse();
       },
@@ -131,7 +141,7 @@ export class WegstreckePage implements OnInit {
     let previousRuns: Run[] = JSON.parse(localStorage.getItem('previousRuns')) as Run[];
     if (previousRuns !== null) {
       // tslint:disable-next-line:max-line-length
-      previousRuns.push({ date: moment().format('DD/MM/YYYY HH:mm:ss'), coordinates: this.coordinates, runTime: this.diff, distance: this.getDistanceFromLatLonInKm(this.geoLatitude, this.geoLongitude, this.geoStopLatitude, this.geoStopLongitude), photo: this.base64Image } as Run);
+      previousRuns.push({ date: moment().format('DD/MM/YYYY HH:mm:ss'), coordinates: this.coordinates, runTime: this.diff, distance: this.distanceInKm, photo: this.base64Image } as Run);
       localStorage.setItem('previousRuns', JSON.stringify(previousRuns));
     } else {
       previousRuns = [];
@@ -240,6 +250,11 @@ export class WegstreckePage implements OnInit {
         // tslint:disable-next-line:max-line-length
         this.geolocation.getCurrentPosition().then((resp) => {
           console.log('new');
+          if (this.coordinates.length > 0) {
+            // tslint:disable-next-line:max-line-length
+            this.distanceInKm += this.getDistanceFromLatLonInKm(this.coordinates[this.coordinates.length - 1].lat, this.coordinates[this.coordinates.length - 1].lng, resp.coords.latitude, resp.coords.longitude);
+            console.log(this.distanceInKm);
+          }
           this.coordinates.push({ lng: resp.coords.longitude, lat: resp.coords.latitude } as Coordinate);
           console.log(this.coordinates);
         });
@@ -310,6 +325,7 @@ export class WegstreckePage implements OnInit {
       this.geoStopLongitude = resp.coords.longitude;
     });
     this.calculateDistanceInKm();
+    this.distanceInKm = +this.distanceInKm.toFixed(2);
     this.takePhoto();
   }
 
@@ -324,7 +340,7 @@ export class WegstreckePage implements OnInit {
 
   }
   calculateDistanceInKm() {
-    this.distanceInKm = this.getDistanceFromLatLonInKm(this.geoLatitude, this.geoLongitude, this.geoStopLatitude, this.geoStopLongitude);
+    // this.distanceInKm = this.getDistanceFromLatLonInKm(this.geoLatitude, this.geoLongitude, this.geoStopLatitude, this.geoStopLongitude);
   }
 
   getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {

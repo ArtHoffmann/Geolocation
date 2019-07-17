@@ -16,25 +16,25 @@ export class AppComponent {
       icon: 'home'
     },
     {
-      title: 'List',
+      title: 'Liste der bisherigen Läufe',
       url: '/list',
       icon: 'list'
     },
+    // {
+    //   title: 'Foto',
+    //   url: '/foto',
+    //   icon: 'camera'
+    // },
     {
-      title: 'Foto',
-      url: '/foto',
-      icon: 'camera'
-    },
-    {
-      title: 'Wegstrecke',
+      title: 'Wegstreckentracking',
       url: '/wegstrecke',
       icon: 'person'
     },
-    {
-      title: 'Maps',
-      url: '/mapspage',
-      icon: 'locate'
-    },
+    // {
+    //   title: 'Maps',
+    //   url: '/mapspage',
+    //   icon: 'locate'
+    // },
 
   ];
 
