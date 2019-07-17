@@ -100,8 +100,8 @@ export class WegstreckePage implements OnInit {
     this.end = moment().format('DD/MM/YYYY HH:mm:ss');
     console.log('Ende ' + this.end);
     this.calcTimeDiffernce(this.starTime, this.end);
-    this.show = true;
-    this.loadMap(this.coordinates);
+    // this.show = true;
+    // this.loadMap(this.coordinates);
     // ....
   }
 
@@ -133,6 +133,8 @@ export class WegstreckePage implements OnInit {
       },
       err => {
         console.log(err);
+        this.show = true;
+        this.loadMap(this.coordinates);
       }
     );
   }
